@@ -53,17 +53,17 @@ function Test-IfModulesInBlobStorage
     $context = $storageAcc.Context
 
     Write-Log -Object 'Downloading blob contents from the container'
-    $prefix = 'M365DSCDependencies-' + ($Version -replace '\.', '_')
-    $blobContent = Get-AzStorageBlob -Container $ContainerName -Context $context -Prefix $prefix
+    $prefix = 'M365DSCDependencies-' + ($Version -replace '\.', '_') + '.zip'
+    $blobContent = Get-AzStorageBlob -Container $ContainerName -Context $context
 
-    if ($null -eq $blobContent)
+    if ($prefix -eq $blobContent.Name)
     {
-        Write-Log -Object "[ERROR] No files found that match the pattern: '$prefix'"
-        return $false
+        Write-Log -Object "Files found that match the pattern: '$prefix'"
+        return $true
     }
     else
     {
         Write-Log -Object "[ERROR] No files found that match the pattern: '$prefix'" -Failure
-        return $true
+        return $false
     }
 }
